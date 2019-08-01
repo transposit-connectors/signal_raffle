@@ -1,4 +1,4 @@
-# SIGNAL 2019 Demo App
+# SIGNAL 2019 Raffle App
 
 An app that uses [Twilio](https://www.twilio.com/) and [SendGrid](https://sendgrid.com/) together to demo the [Transposit](https://transposit.com) platform and create a raffle.
 
@@ -12,9 +12,13 @@ By using webhooks, we can have Twilio call a function in Transposit with the tex
 
 `raffle`: A simple JAvaScript function that returns a random entry of our list from `get_records`.
 
+`reminder`: Sends a reminder text to everyone who entered into the raffle to come back to the booth.
+
 `send_mail`: A API to SendGrid that sends an email to a given email.
 
-`webhook`: The function that is called when Twilio receives a text, which passes in the content.
+`send_message`: A Twilio API call to send a text message.
+
+`webhook`: The function that is called when Twilio receives a text, which passes in the content to the respective places.
 
 ## Expansion Ideas:
 
