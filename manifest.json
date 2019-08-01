@@ -117,6 +117,6 @@
       }]
     },
     "description": "A demo app that uses Twilio webhooks along with SendGrid emails and Airtable",
-    "displayName": "SIGNAL 2019 Demo"
+    "displayName": "SIGNAL 2019 Raffle"
   }
 }
