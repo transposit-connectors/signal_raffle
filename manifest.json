@@ -71,6 +71,7 @@
         }
       }, {
         "id": "send_message",
+        "description": "Sends a text message with Twilio",
         "tql": {
           "parameters": [{
             "name": "sid",
@@ -86,11 +87,13 @@
         }
       }, {
         "id": "reminder",
+        "description": "Sends a reminder to all entries by text to return",
         "function": {
           "js": "reminder.js"
         }
       }, {
         "id": "get_records",
+        "description": "Returns a list of all emails in Airtable",
         "tql": {
           "parameters": [{
             "name": "baseid",
