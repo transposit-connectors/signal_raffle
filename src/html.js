@@ -335,9 +335,11 @@
                             width="182"
                           />
                         <div align="center">
-                          <img
-                            src="https://pbs.twimg.com/profile_images/1113425076957908992/RnEjq55c_400x400.png"
-                          />
+                          <a href="https://www.transposit.com/signal/">
+                            <img
+                              src="https://pbs.twimg.com/profile_images/1113425076957908992/RnEjq55c_400x400.png"
+                            />
+                          </a>
                         </div> 
 
                         </p>
@@ -372,7 +374,7 @@
                           >quickstart guide</a> to start building your own app with
                           one of our many different connectors like Twilio and SendGrid.
                           We also have a collection of
-                          <a href="https://www.transposit.com/apps/?c=signal"
+                          <a href="https://www.transposit.com/signal/"
                           >sample apps</a> for you to take a look at for further
                           inspiration.
                         </p>
