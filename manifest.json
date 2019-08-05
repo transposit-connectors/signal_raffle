@@ -83,7 +83,7 @@
             "name": "phonenum",
             "type": "STRING"
           }],
-          "tql": "SELECT * FROM twilio.send_message\n  WHERE mediaTypeExtension='.json'\n  AND AccountSid=@sid\n  AND $body=(SELECT {\n    'To' : @recipient,\n    'From' : @phonenum,\n    'Body' : \"Remember to come back to the Transposit booth at 4:30pm for the raffle!\"\n  })\n"
+          "tql": "SELECT * FROM twilio.send_message\n  WHERE mediaTypeExtension='.json'\n  AND AccountSid=@sid\t\t-- Set this in environment variables\n  AND $body=(SELECT {\n    'To' : @recipient,\n    'From' : @phonenum,\t\t-- Set this in environment variables\n    'Body' : \"Remember to come back to the Transposit booth at 4:30pm for the raffle!\"\n  })\n"
         }
       }, {
         "id": "reminder",
@@ -99,7 +99,7 @@
             "name": "baseid",
             "type": "STRING"
           }],
-          "tql": "SELECT fields.email FROM airtable.get_records\n  WHERE baseId=@baseid\n  AND table='Emails'\n"
+          "tql": "SELECT fields.email FROM airtable.get_records\n  WHERE baseId=@baseid\t\t-- Set this in environment variables\n  AND table='Emails'\n"
         }
       }],
       "javascriptAPIVersion": "3",
