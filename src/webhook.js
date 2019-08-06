@@ -7,7 +7,8 @@
   let phones = [];
   if (stash.get("phones") != null) {
     phones = stash.get("phones");
-  } else if (!stash.get("phones").includes(body.From)) {
+  } 
+  if (!phones.includes(body.From)) {
     phones.push(body.event.user.id);
     stash.put("phones", phones);
     api.run('this.create_record', {email: email, baseid: env.get("baseid")});
