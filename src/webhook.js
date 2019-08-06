@@ -3,7 +3,15 @@
   let content = api.run('this.html')[0];
   let email = body.Body.trim().toLowerCase();
 
-  api.run('this.create_record', {email: email, baseid: env.get("baseid")});
+  let phones = [];
+  if (stash.get("phones") != null) {
+    phones = stash.get("phones");
+  } else if (!stash.get("phones").includes(body.From)) {
+    phones.push(body.event.user.id);
+    stash.put("phones", phones);
+    api.run('this.create_record', {email: email, baseid: env.get("baseid")});
+  }
+
   api.run('this.send_mail', {content: content, email: email});
   return { status_code: 200 };
 }
