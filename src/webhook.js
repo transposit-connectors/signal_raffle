@@ -3,6 +3,7 @@
   let content = api.run('this.html')[0];
   let email = body.Body.trim().toLowerCase();
 
+  // Check for unique phone number
   let phones = [];
   if (stash.get("phones") != null) {
     phones = stash.get("phones");
