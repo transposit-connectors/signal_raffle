@@ -9,7 +9,7 @@
     phones = stash.get("phones");
   } 
   if (!phones.includes(body.From)) {
-    phones.push(body.event.user.id);
+    phones.push(body.From);
     stash.put("phones", phones);
     api.run('this.create_record', {email: email, baseid: env.get("baseid")});
   }
