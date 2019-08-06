@@ -10,6 +10,7 @@
     api.run('this.create_record', {email: email, baseid: env.get("baseid")});
   } else {
     if (!stash.get("phones").includes(body.From)) {
+      phones = stash.get("phones");
       stash.put("phones", phones.push(body.From));
       api.run('this.create_record', {email: email, baseid: env.get("baseid")});
     }
