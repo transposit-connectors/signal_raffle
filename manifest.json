@@ -119,7 +119,7 @@
         "type": "STRING"
       }]
     },
-    "description": "A demo app that uses Twilio webhooks along with SendGrid emails and Airtable",
+    "description": "Organize a text-to-enter raffle, with Twilio, SendGrid, and Airtable working together.",
     "displayName": "SIGNAL 2019 Raffle"
   }
 }
