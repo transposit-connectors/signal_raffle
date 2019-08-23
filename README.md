@@ -1,4 +1,4 @@
-# SIGNAL 2019 Raffle App
+# SIGNAL 2019 Raffle
 
 An app that uses [Twilio](https://www.twilio.com/) and [SendGrid](https://sendgrid.com/) together to demo the [Transposit](https://transposit.com) platform and create a raffle.
 
