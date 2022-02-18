@@ -1,123 +1,155 @@
 {
   "v2": {
     "transposit": {
-      "dependencies": [{
-        "name": "transposit/sendgrid:v3.*.*",
-        "alias": "sendgrid"
-      }, {
-        "name": "transposit/airtable:v2.*.*",
-        "alias": "airtable"
-      }, {
-        "name": "transposit/twilio:v1.*.*",
-        "alias": "twilio"
-      }],
-      "operations": [{
-        "id": "send_mail",
-        "description": "Sends our email with SendGrid API",
-        "tql": {
-          "parameters": [{
-            "name": "email",
-            "type": "STRING"
-          }, {
-            "name": "content",
-            "type": "STRING"
-          }],
-          "tql": "SELECT * FROM sendgrid.send_mail\n  WHERE $body=(SELECT {\n    'personalizations' : [ {\n      'to' : [ {\n        'name' : 'Friend of Transposit',\n        'email' : @email\n      } ],\n    } ],\n    'subject' : 'Thank You for Visiting Transposit at SIGNAL 2019',\n    'content' : [ {\n      \"type\": \"text/html\",\n      \"value\": @content\n    } ],\n    'from' : {\n      'name' : 'Transposit@SIGNAL2019',\n      'email' : 'noreply@transposit.com'\n    }\n  })\n"
-        }
-      }, {
-        "id": "webhook",
-        "description": "The functions Twilio calls when it recieves a text",
-        "function": {
-          "parameters": [{
-            "name": "http_event",
-            "default": {
-              "text": "{\"http_method\": \"GET\", \"query_parameters\": {}, \"headers\": {}, \"body\": \"\"}"
-            },
-            "type": "OBJECT"
-          }],
-          "js": "webhook.js"
+      "dependencies": [
+        {
+          "name": "transposit/sendgrid:v3.*.*",
+          "alias": "sendgrid"
         },
-        "access": {
-          "requireApiKey": true,
-          "webhook": true
+        {
+          "name": "transposit/airtable:v2.*.*",
+          "alias": "airtable"
+        },
+        {
+          "name": "transposit/twilio:v1.*.*",
+          "alias": "twilio"
         }
-      }, {
-        "id": "html",
-        "description": "Storage for our HTML message",
-        "function": {
-          "js": "html.js"
+      ],
+      "operations": [
+        {
+          "id": "send_mail",
+          "description": "Sends our email with SendGrid API",
+          "tql": {
+            "parameters": [
+              {
+                "name": "email",
+                "type": "STRING"
+              },
+              {
+                "name": "content",
+                "type": "STRING"
+              }
+            ],
+            "tql": "SELECT * FROM sendgrid.send_mail\n  WHERE $body=(SELECT {\n    'personalizations' : [ {\n      'to' : [ {\n        'name' : 'Friend of Transposit',\n        'email' : @email\n      } ],\n    } ],\n    'subject' : 'Thank You for Visiting Transposit at SIGNAL 2019',\n    'content' : [ {\n      \"type\": \"text/html\",\n      \"value\": @content\n    } ],\n    'from' : {\n      'name' : 'Transposit@SIGNAL2019',\n      'email' : 'noreply@transposit.com'\n    }\n  })\n"
+          }
+        },
+        {
+          "id": "webhook",
+          "description": "The functions Twilio calls when it recieves a text",
+          "function": {
+            "parameters": [
+              {
+                "name": "http_event",
+                "default": {
+                  "text": "{\"http_method\": \"GET\", \"query_parameters\": {}, \"headers\": {}, \"body\": \"\"}"
+                },
+                "type": "OBJECT"
+              }
+            ],
+            "js": "webhook.js"
+          },
+          "access": {
+            "requireApiKey": true,
+            "webhook": true
+          }
+        },
+        {
+          "id": "html",
+          "description": "Storage for our HTML message",
+          "function": {
+            "js": "html.js"
+          }
+        },
+        {
+          "id": "create_record",
+          "description": "Stores emails in Airtable",
+          "tql": {
+            "parameters": [
+              {
+                "name": "email",
+                "type": "STRING"
+              },
+              {
+                "name": "baseid",
+                "type": "STRING"
+              },
+              {
+                "name": "phone",
+                "type": "STRING"
+              }
+            ],
+            "tql": "SELECT * FROM airtable.create_record\n  WHERE baseId=@baseid\t\t-- Set this in environment variables\n  AND table='Emails'\n  AND $body=(SELECT {\n    'fields' : { email: @email }\n  })\n"
+          }
+        },
+        {
+          "id": "raffle",
+          "description": "Chooses a winning email by random",
+          "function": {
+            "js": "raffle.js"
+          }
+        },
+        {
+          "id": "send_message",
+          "description": "Sends a text message with Twilio",
+          "tql": {
+            "parameters": [
+              {
+                "name": "sid",
+                "type": "STRING"
+              },
+              {
+                "name": "recipient",
+                "type": "STRING"
+              },
+              {
+                "name": "phonenum",
+                "type": "STRING"
+              }
+            ],
+            "tql": "SELECT * FROM twilio.send_message\n  WHERE mediaTypeExtension='.json'\n  AND AccountSid=@sid\t\t-- Set this in environment variables\n  AND $body=(SELECT {\n    'To' : @recipient,\n    'From' : @phonenum,\t\t-- Set this in environment variables\n    'Body' : \"Remember to come back to the Transposit booth at 4:30pm for the raffle!\"\n  })\n"
+          }
+        },
+        {
+          "id": "reminder",
+          "description": "Sends a reminder to all entries by text to return",
+          "function": {
+            "js": "reminder.js"
+          }
+        },
+        {
+          "id": "get_records",
+          "description": "Returns a list of all emails in Airtable",
+          "tql": {
+            "parameters": [
+              {
+                "name": "baseid",
+                "type": "STRING"
+              }
+            ],
+            "tql": "SELECT fields.email FROM airtable.get_records\n  WHERE baseId=@baseid\t\t-- Set this in environment variables\n  AND table='Emails'\n"
+          }
         }
-      }, {
-        "id": "create_record",
-        "description": "Stores emails in Airtable",
-        "tql": {
-          "parameters": [{
-            "name": "email",
-            "type": "STRING"
-          }, {
-            "name": "baseid",
-            "type": "STRING"
-          }, {
-            "name": "phone",
-            "type": "STRING"
-          }],
-          "tql": "SELECT * FROM airtable.create_record\n  WHERE baseId=@baseid\t\t-- Set this in environment variables\n  AND table='Emails'\n  AND $body=(SELECT {\n    'fields' : { email: @email }\n  })\n"
-        }
-      }, {
-        "id": "raffle",
-        "description": "Chooses a winning email by random",
-        "function": {
-          "js": "raffle.js"
-        }
-      }, {
-        "id": "send_message",
-        "description": "Sends a text message with Twilio",
-        "tql": {
-          "parameters": [{
-            "name": "sid",
-            "type": "STRING"
-          }, {
-            "name": "recipient",
-            "type": "STRING"
-          }, {
-            "name": "phonenum",
-            "type": "STRING"
-          }],
-          "tql": "SELECT * FROM twilio.send_message\n  WHERE mediaTypeExtension='.json'\n  AND AccountSid=@sid\t\t-- Set this in environment variables\n  AND $body=(SELECT {\n    'To' : @recipient,\n    'From' : @phonenum,\t\t-- Set this in environment variables\n    'Body' : \"Remember to come back to the Transposit booth at 4:30pm for the raffle!\"\n  })\n"
-        }
-      }, {
-        "id": "reminder",
-        "description": "Sends a reminder to all entries by text to return",
-        "function": {
-          "js": "reminder.js"
-        }
-      }, {
-        "id": "get_records",
-        "description": "Returns a list of all emails in Airtable",
-        "tql": {
-          "parameters": [{
-            "name": "baseid",
-            "type": "STRING"
-          }],
-          "tql": "SELECT fields.email FROM airtable.get_records\n  WHERE baseId=@baseid\t\t-- Set this in environment variables\n  AND table='Emails'\n"
-        }
-      }],
+      ],
       "javascriptAPIVersion": "3",
       "source": "src",
       "userSettingsDisplay": "GENERATED",
-      "appSettings": [{
-        "name": "baseid",
-        "description": "The Airtable base ID. This can be found as part of the API documentation URL. Go to https://airtable.com/api and select the base you're interested in, then find the base ID in the resulting URL: https://airtable.com/[baseId]/api/docs.",
-        "type": "STRING"
-      }, {
-        "name": "sid",
-        "description": "Your twilio account SID",
-        "type": "STRING"
-      }, {
-        "name": "phonenum",
-        "description": "Your twilio phone number",
-        "type": "STRING"
-      }]
+      "appSettings": [
+        {
+          "name": "baseid",
+          "description": "The Airtable base ID. This can be found as part of the API documentation URL. Go to https://airtable.com/api and select the base you're interested in, then find the base ID in the resulting URL: https://airtable.com/[baseId]/api/docs.",
+          "type": "STRING"
+        },
+        {
+          "name": "sid",
+          "description": "Your twilio account SID",
+          "type": "STRING"
+        },
+        {
+          "name": "phonenum",
+          "description": "Your twilio phone number",
+          "type": "STRING"
+        }
+      ]
     },
     "description": "Organize a text-to-enter raffle, with Twilio, SendGrid, and Airtable working together.",
     "displayName": "SIGNAL 2019 Raffle"
